@@ -1,16 +1,7 @@
 <center><img src="soakbean.gif"></center>
 
-## Usage
+## Plug and play middleware for redbean server 
 
-* express-style programming
-* easy routing
-* re-use middleware functions across redbean projects
-
-## Installation
-
-Either:
-1. Use the `soakbean.com` as a starting point, add files to `src` and run `./make all && ./soakbean.com`
-2. copy [soakbean.lua](src/lua/soakbean.lua) and optionally [json.lua](src/.lua/json.lua) to your redbean `.lua` folder, and copy the `.init.lua` below
 
 ## Getting started 
 
@@ -35,6 +26,17 @@ app.post('^/save', function(req,next)       -- easy endpoints using .get()
   local data = {ok=true}
 end)
 ```
+
+Features:<br>
+* easy routing
+* express-style programming
+* re-use middleware functions across redbean projects
+
+## Installation
+
+Either:
+1. Use the `soakbean.com` as a starting point, add files to `src` and run `./make all && ./soakbean.com`
+2. copy [soakbean.lua](src/lua/soakbean.lua) and optionally [json.lua](src/.lua/json.lua) to your redbean `.lua` folder, and copy the `.init.lua` below
 
 ## Middleware functions
 
