@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>SOAKBEAN - a buddy of redbean</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="logo.css" rel="stylesheet">
+		<!-- see docs @ https://punica.site -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/codeforms/Punica-CSS-Framework@2.x.x/dist/punica.min.css" />
+    <!-- see docs @ https://reefjs.com -->
+    <script src="https://cdn.jsdelivr.net/npm/reefjs@10/dist/reef.min.js"></script>
+  </head>
+  <body>
+    <div id="app"></div>
+
+    <script>
+
+			fetch('/data')
+			.then( (res) => res.json() )
+			.then( (data) => {
+
+				let store = new Reef.Store({
+					data:{
+						...data,
+						time:""
+					}
+				})
+
+				let app = new Reef('#app', {
+					store,
+					template: function (props) {
+						return `
+						<div class="container">
+							<div class="row">
+								<div class="col-16">
+									<div class="pure panel">
+										<div class="header" style="flex-direction:column">
+											<!-- logo -->
+											<div style="margin:50px;margin-top:150px">
+												<div class="border one">
+													<div class="dots left"></div>
+													<div class="soakbean right">
+														<h1>soakbean</h1>
+													</div>
+												</div>
+												<div class="container four">
+													<div class="border grow">
+														<div class="zigzag left"></div>
+														<div class="redbean right">
+															<h1>redbean</h1>
+														</div>
+													</div>
+												</div>
+											</div>
+											<div class="title"> ${props.subtitle} </div>
+										</div>
+										<div class="content">
+											<div id="notes" style="text-align:center"></div><br>
+											<code>
+<b style="color:#000; size:15px">.init.lua</b>											
+												<pre style="background:#333; color:#FFF; margin:10px; border-radius:5px; padding:20px;">
+app = require("soakbean") {
+  subtitle = "more SOAK for <a href='https://redbean.dev'>redbean</a>",
+  notes   = {"🤩 express-style programming","🖧 easy routing","♻ re-use middleware function"}
+}
+
+function OnHttpRequest()
+  app.url['^/data']   = '/data.lua'         -- setup file endpoint
+  app.use( app.router( app.url ) )          -- url router
+  app.use( function(req,next) Route() end)  -- redbean fileserver
+  app.start()
+end
+
+app.post('^/save', function(req,next)       -- easy endpoints using .get()
+  SetStatus(200)                            -- .post() .put() .delete() .options()
+  SetHeader('Content-Type', 'application/json; charset=utf-8')
+  local data = {ok=true}
+end)
+												</pre>	
+											</code>
+											<center>${props.time}</center>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>`
+					}
+				})
+
+				let notes = new Reef('#notes', {
+					store,
+					template: function (props) {
+						return `
+							<ul class="list">
+								${props.notes.map(function (note) {
+									return `<li>${note}</li>`
+								}).join('')}
+							</ul>`
+					},
+					attachTo: app
+				})
+
+				setInterval( () => store.data.time = new Date(), 1000 )
+
+				app.render()
+
+			})
+    </script>
+  </body>
+</html>
