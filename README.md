@@ -11,6 +11,7 @@ app = require("soakbean") {
 }
 
 app.url['^/mydata']   = '/data.lua'         -- add virtual file endpoints
+
 app                                         
 .use( app.router( app.url ) )               -- url router
 .use( require("blacklisturl")({"^/foo"}) )  -- add plug'n'play middleware 

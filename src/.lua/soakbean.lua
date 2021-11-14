@@ -147,6 +147,7 @@ return function(data)
   sb.app = app
   sb.data = data
   sb.data.url = {}
+  if data.url == nil then sb.data.url = {} end 
   sb.get  = sb.request('GET')
   sb.post = sb.request('POST')
   sb.put = sb.request('PUT')
