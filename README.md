@@ -1,4 +1,4 @@
-<center><img src=".dtp/soakbean.jpg"/><img src=".dtp/soakbean.gif"></center>
+<img src=".dtp/soakbean.jpg"/>
 
 ## Plug and play middleware for redbean server 
 
@@ -27,6 +27,8 @@ end)
 ```
 
 > Profit! Now run `soakbean.com -D . -- -my_cli_arg=99` on windows,mac and linux!
+
+<img src=".dtp/soakbean.gif">
 
 * re-use middleware functions across redbean projects
 * reactive programming (write less code)
