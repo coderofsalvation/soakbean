@@ -14,7 +14,6 @@ app = require("soakbean") {
 app.url['^/data']   = '/data.lua'          -- setup file endpoint
 app                                        --
 .use( app.router( app.url ) )              -- url router
-.use( require("blacklisturl")({"^/foo"}) ) --
 .use( function(req,next) Route() end)      -- redbean fileserver
 
 function OnHttpRequest()
