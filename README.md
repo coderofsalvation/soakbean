@@ -16,13 +16,13 @@ app                                        --
 .use( require("blacklisturl")({"^/foo"}) ) -- add plug'n'play middleware 
 .use( function(req,next) Route() end)      -- redbean fileserver
 
-function OnHttpRequest() app.run() end
-
 app.post('^/save', function(req,next)       -- setup inline POST endpoint
   SetStatus(200)                            -- also .get(), .put(), .delete(), .options()
   app.cache = req.body
   print(req.body.foo.bar)                   -- automatic json parser
 end)
+
+function OnHttpRequest() app.run() end      -- attach to redbean
 ```
 
 > Profit! Now run `soakbean.com -D . -- -my_cli_arg=99` on windows,mac and linux!
