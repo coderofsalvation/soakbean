@@ -28,10 +28,10 @@ end)
 
 > Profit! Now run `soakbean.com -D . -- -my_cli_arg=99` on windows,mac and linux!
 
-Basically :<br>
 * re-use middleware functions across redbean projects
 * reactive programming (write less code)
 * easy express-style routing
+* more robust apps towards redbean API changes
 
 ## Installation
 
