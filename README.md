@@ -71,7 +71,7 @@ app.use( function(req,next)
 end)
 ```
 
-> WANTED: please contribute your middleware functions to the [middleware](middleware) folder. Please donate middleware (see roadmap below).
+> WANTED: please contribute your middleware functions to the [middleware](middleware) folder. Everybody loves (re)using battle-tested middleware.
 
 ## Req object
 
