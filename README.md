@@ -37,7 +37,7 @@ end)
 
 Either:
 1. Use [soakbean.com](soakbean.com) as a starting point, add files to `src` and run `./make all && ./soakbean.com`
-2. Or copy [soakbean.lua](src/lua/soakbean.lua) and optionally [json.lua](src/.lua/json.lua) to your redbean `.lua` folder, and copy the `.init.lua` below
+2. Or copy [soakbean.lua](src/lua/soakbean.lua) and optionally [json.lua](src/.lua/json.lua) to your [redbean.com](https://redbean.dev) `.lua` folder, and copy the `.init.lua` below
 3. clone this repo and run `docker build . -t soakbean && docker build run soakbean` (\*TODO\*)
 
 > optional: copy [middleware](middleware) functions to `src/.lua`-folder where needed
