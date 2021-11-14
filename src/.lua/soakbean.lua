@@ -78,18 +78,19 @@ sb = {
 
   use = function(f)
     table.insert(sb.middleware,f)
+    return sb.app
   end,
 
-  useDefaults = function()
+  useDefaults = function(app)
     app.use( function(req,next)
-      pub(req.url,req)
+      app.pub(req.url,req)
       next()
     end)
   end,
 
-  start = function(req)
+  run = function(req)
     local next = function() end
-    local k = 1
+    local k = 0
     local req = {
       param=GetParams(),
       method=GetMethod(),
@@ -102,13 +103,12 @@ sb = {
     if req.method == "POST" and req.header['Content-Type'] == "application/json" and GetPayload():sub(0,1) == "{" then
       req.body = json.decode( GetPayload() )
     end
-    sb.useDefaults()
     -- run middleware
-    local next = function()
+    next = function()
       k = k+1
-      if sb.middleware[k] ~= nil then sb.middleware[k](req,next) end
+      if type(sb.middleware[k]) == "function" then sb.middleware[k](req,next) end
     end
-    if type(sb.middleware[k]) == "function" then sb.middleware[k](req,next) end
+    next()
   end,
 
   router = function(router)
@@ -153,5 +153,6 @@ return function(data)
   sb.options = sb.request('OPTIONS')
   sb.delete  = sb.request('DELETE')
   app.init()
+  sb.useDefaults(app)
   return app
 end

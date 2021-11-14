@@ -2,49 +2,59 @@
 
 ## Plug and play middleware for redbean server 
 
-
-## Getting started 
-
-Everything boils down to this [.init.lua](src/.init.lua):
+Write beautiful redbean apps like this [.init.lua](src/.init.lua):
 
 ```lua
 app = require("soakbean") {
-  subtitle = "more SOAK for <a href='https://redbean.dev'>redbean</a>",
-  notes   = {"🤩 express-style programming","🖧 easy routing","♻ re-use middleware function"}
+  opts = { my_cli_arg=1 },
+  appname = "SOAKBEAN app"
 }
 
+app.url['^/data']   = '/data.lua'          -- add file endpoints
+app                                        --
+.use( app.router( app.url ) )              -- url router
+.use( require("blacklisturl")({"^/foo"}) ) -- add plug'n'play middleware 
+.use( function(req,next) Route() end)      -- redbean fileserver
+
 function OnHttpRequest()
-  app.url['^/data']   = '/data.lua'         -- setup file endpoint
-  app.use( app.router( app.url ) )          -- url router
-  app.use( function(req,next) Route() end)  -- redbean fileserver (Route middleware)
-  app.start()
+  app.run()
 end
 
-app.post('^/save', function(req,next)       -- easy endpoints using .get()
-  SetStatus(200)                            -- .post() .put() .delete() .options()
-  SetHeader('Content-Type', 'application/json; charset=utf-8')
-  local data = {ok=true}
+app.post('^/save', function(req,next)       -- setup inline POST endpoint
+  SetStatus(200)                            -- also .get(), .put(), .delete(), .options()
+  app.cache = req.body
 end)
 ```
 
-Features:<br>
-* easy routing
-* express-style programming
+Basically :<br>
 * re-use middleware functions across redbean projects
+* reactive programming (write less code)
+* easy express-style routing
 
 ## Installation
 
 Either:
-1. Use the `soakbean.com` as a starting point, add files to `src` and run `./make all && ./soakbean.com`
-2. copy [soakbean.lua](src/lua/soakbean.lua) and optionally [json.lua](src/.lua/json.lua) to your redbean `.lua` folder, and copy the `.init.lua` below
+1. Use [soakbean.com](soakbean.com) as a starting point, add files to `src` and run `./make all && ./soakbean.com`
+2. Or copy [soakbean.lua](src/lua/soakbean.lua) and optionally [json.lua](src/.lua/json.lua) to your redbean `.lua` folder, and copy the `.init.lua` below
+3. clone this repo and run `docker build . -t soakbean && docker build run soakbean` 
+
+> optional: copy [middleware](middleware) functions to `src/.lua`-folder where needed
 
 ## Middleware functions
 
-You can easily manipulate the http-request flow, by putting middleware functions before the `Route()` middleware
+You can easily manipulate the http-request flow, using middleware functions:
+
+```lua
+app.use( require("blacklisturl")({"^/secret/","^/weed.mp4"}) )
+```
+
+> make sure you copy [middleware/blacklisturl.lua](middleware/blacklisturl.lua) to [src/.lua](src/.lua)
+
+or just write ad-hoc middleware:
 
 ```lua
 app.use( function(req,next)
-    if !req.loggedin && req.url:match("^/secret") 
+    if !req.loggedin && req.url:match("^/mydata") then
         SetStatus(403)
     else next()
 end)
@@ -64,11 +74,58 @@ end)
 | `req.protocol` | string | `GetScheme()` |
 | `req.body` | table (for json POST/PUT/DELETE) or string |  |
 
+## Reactive programming
+
+#### react to variable changes:
+
+```lua
+app.on("foo", function(k,v)
+  print("appname changed: " .. v)
+end)
+
+app.foo = "flop"   -- output: appname changed: flop
+app.foo = "bar"    -- output: appname changed: bar
+```
+
+#### react to function calls 
+
+```lua 
+app.on('foobar', function(a)
+    print("!")
+end)
+
+app.foobar = function(a)
+    print(a)
+end
+
+app.foobar()       -- output: foobar!
+```
+
+#### react to router patterns
+
+```lua
+app.url['^/foo'] = '/somefile.lua'
+
+app.on('^/foo', function(a,b)
+  -- do something
+end)
+```
+
+#### react to luafile endpoint execution 
+
+```lua
+app.url['^/foo'] = '/somefile.lua'
+
+app.on('foo.lua', function(a,b)
+  -- do something
+end)
+```
+
 ## Roadmap / Scope
 
 * scope is backend, not frontend
 * http auth
-* middleware: sqlite CRUD middleware
 * middleware: sqlite user sessions
 * middleware: sqlite tiny job queue
 * middleware: sqlite tiny rule engine
+* middleware: sqlite CRUD middleware (endpoints + sqlite schema derived from jsonschema)

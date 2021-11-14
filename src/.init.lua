@@ -11,11 +11,14 @@ app = require("soakbean") {
   notes   = {"🤩 express-style programming","🖧 easy routing","♻ re-use middleware function"}
 }
 
+app.url['^/data']   = '/data.lua'          -- setup file endpoint
+app                                        --
+.use( app.router( app.url ) )              -- url router
+.use( require("blacklisturl")({"^/foo"}) ) --
+.use( function(req,next) Route() end)      -- redbean fileserver
+
 function OnHttpRequest()
-  app.url['^/data']   = '/data.lua'         -- setup file endpoint
-  app.use( app.router( app.url ) )          -- url router
-  app.use( function(req,next) Route() end)  -- redbean fileserver
-  app.start()
+  app.run()
 end
 
 app.post('^/save', function(req,next)       -- setup inline POST endpoint
