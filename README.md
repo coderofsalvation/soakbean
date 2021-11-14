@@ -1,4 +1,4 @@
-<center><img src=".dtp/soakbean.gif"></center>
+<center><img src=".dtp/soakbean.jpg"/><img src=".dtp/soakbean.gif"></center>
 
 ## Plug and play middleware for redbean server 
 
