@@ -26,6 +26,8 @@ app.post('^/save', function(req,next)       -- setup inline POST endpoint
 end)
 ```
 
+> Profit! Now run `soakbean.com -D . -- -my_cli_arg=99` on windows,mac and linux!
+
 Basically :<br>
 * re-use middleware functions across redbean projects
 * reactive programming (write less code)
@@ -95,7 +97,7 @@ app.on('foobar', function(a)
 end)
 
 app.foobar = function(a)
-    print(a)
+    print('foobar')
 end
 
 app.foobar()       -- output: foobar!
@@ -116,7 +118,7 @@ end)
 ```lua
 app.url['^/foo'] = '/somefile.lua'
 
-app.on('foo.lua', function(a,b)
+app.on('somefile.lua', function(a,b)
   -- do something
 end)
 ```
