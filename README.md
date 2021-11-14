@@ -10,15 +10,15 @@ app = require("soakbean") {
   appname = "SOAKBEAN app"
 }
 
-app.url['^/data']   = '/data.lua'          -- add file endpoints
-app                                        --
-.use( app.router( app.url ) )              -- url router
-.use( require("blacklisturl")({"^/foo"}) ) -- add plug'n'play middleware 
-.use( function(req,next) Route() end)      -- redbean fileserver
+app.url['^/data']   = '/data.lua'           -- add file endpoints
+app                                         
+.use( app.router( app.url ) )               -- url router
+.use( require("blacklisturl")({"^/foo"}) )  -- add plug'n'play middleware 
+.use( function(req,next) Route() end)       -- redbean fileserver
 
 app.post('^/save', function(req,next)       -- setup inline POST endpoint
-  SetStatus(200)                            -- also .get(), .put(), .delete(), .options()
-  app.cache = req.body
+  SetStatus(200)                            -- also support for: .get() 
+  app.cache = req.body                      -- .put() .delete() and .options()
   print(req.body.foo.bar)                   -- automatic json parser
 end)
 
