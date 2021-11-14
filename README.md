@@ -16,13 +16,12 @@ app                                        --
 .use( require("blacklisturl")({"^/foo"}) ) -- add plug'n'play middleware 
 .use( function(req,next) Route() end)      -- redbean fileserver
 
-function OnHttpRequest()
-  app.run()
-end
+function OnHttpRequest() app.run() end
 
 app.post('^/save', function(req,next)       -- setup inline POST endpoint
   SetStatus(200)                            -- also .get(), .put(), .delete(), .options()
   app.cache = req.body
+  print(req.body.foo.bar)                   -- automatic json parser
 end)
 ```
 
@@ -35,7 +34,7 @@ end)
 * re-use middleware functions across redbean projects
 * reactive programming (write less code)
 * easy express-style routing
-* more robust apps towards redbean API changes
+* adapt easily to redbean API changes
 
 ## Installation
 
