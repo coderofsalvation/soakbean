@@ -28,6 +28,8 @@ end)
 
 > Profit! Now run `soakbean.com -D . -- -my_cli_arg=99` on windows,mac and linux!
 
+## Beautiful micro stack
+
 <img src=".dtp/soakbean.gif">
 
 * re-use middleware functions across redbean projects
