@@ -2,7 +2,7 @@
 
 ## Plug and play middleware for redbean server 
 
-Write beautiful redbean apps like this [.init.lua](src/.init.lua):
+Write beautiful [redbean apps](https://redbean.dev) like this [.init.lua](src/.init.lua):
 
 ```lua
 app = require("soakbean") {
@@ -38,7 +38,7 @@ Basically :<br>
 Either:
 1. Use [soakbean.com](soakbean.com) as a starting point, add files to `src` and run `./make all && ./soakbean.com`
 2. Or copy [soakbean.lua](src/lua/soakbean.lua) and optionally [json.lua](src/.lua/json.lua) to your redbean `.lua` folder, and copy the `.init.lua` below
-3. clone this repo and run `docker build . -t soakbean && docker build run soakbean` 
+3. clone this repo and run `docker build . -t soakbean && docker build run soakbean` (\*TODO\*)
 
 > optional: copy [middleware](middleware) functions to `src/.lua`-folder where needed
 
@@ -62,7 +62,7 @@ app.use( function(req,next)
 end)
 ```
 
-> WANTED: please contribute your middleware functions to the [middleware](middleware) folder. We need stuff like http auth, sqlite login/logout functionality, Sqlite CRUD-middleware e.g.
+> WANTED: please contribute your middleware functions to the [middleware](middleware) folder. Please donate middleware (see roadmap below).
 
 ## Req object
 
