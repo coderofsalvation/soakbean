@@ -48,10 +48,15 @@ Either:
 
 ## Middleware functions
 
-You can easily manipulate the http-request flow, using middleware functions:
+You can easily manipulate the http-request flow, using existing middleware functions:
 
 ```lua
-app.use( require("blacklisturl")({"^/secret/","^/me-fainting-next-to-justinbieber.mp4"}) )
+app.use( 
+    require("blacklisturl")({
+        "^/secret/",
+        "^/me-fainting-next-to-justinbieber.mp4"
+    })
+)
 ```
 
 > make sure you copy [middleware/blacklisturl.lua](middleware/blacklisturl.lua) to [src/.lua](src/.lua)
