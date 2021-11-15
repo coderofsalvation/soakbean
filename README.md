@@ -84,9 +84,6 @@ end)
 | `req.header` | table | `GetHeaders()` |
 | `req.protocol` | string | `GetScheme()` |
 | `req.body` | table (for json POST/PUT/DELETE) or string |  |
-
-| key | type | alias for redbean |
-|-|-|-|
 | `res.body(value)` | string | `Write(value) including auto-encoding (json e.g.)` |
 | `res.status(code)` | int | `SetStatus(code)` |
 | `res.header(type,value)` | string,string | `SetHeader(type,value)` |
