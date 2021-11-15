@@ -139,18 +139,7 @@ app.on('somefile.lua', function(a,b)
 end)
 ```
 
-#### react to response codes 
-
-```lua
-app.on('res.header', function(k,v)
-  if k == "content-type" and v == "application/xml" then 
-    headerchanges = headerchanges + 1
-  fi
-end)
--- note: only for debugging, use app.use(..) for final header
-```
-
-#### react to response changes
+#### react to response code/header/body changes
 
 ```lua
 app.on('res.status', print )
