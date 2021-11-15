@@ -150,7 +150,7 @@ end)
 ## Roadmap / Scope
 
 * scope is backend, not frontend
-* http auth
+* http auth (*)
 * middleware: sqlite user sessions (*)
 * middleware: sqlite tiny job queue (*)
 * middleware: sqlite tiny rule engine (*)
