@@ -38,14 +38,13 @@ function OnHttpRequest() app.run() end
 * easy express-style routing
 * easily adapt to redbean API changes
 
-## Installation
+## Getting started 
 
-Either:
-1. Use [soakbean.com](soakbean.com) as a starting point, add files to `src` and run `./make all && ./soakbean.com`
-2. Or copy [soakbean.lua](src/lua/soakbean.lua) and optionally [json.lua](src/.lua/json.lua) to your [redbean.com](https://redbean.dev) `.lua` folder, and copy the `.init.lua` below
-3. clone this repo and run `docker build . -t soakbean && docker build run soakbean` (\*TODO\*)
+| Easy | DIY | Docker |
+|-|-|-|
+| rename [soakbean.com](soakbean.com) to `soakbean.zip`, add lua + html files, rename back to `soakbean.com` and run `./soakbean.com` | copy [soakbean.lua](src/lua/soakbean.lua) (and optional middleware) to your [redbean.com](https://redbean.dev) `.lua` folder, and copy the `.init.lua` below | clone this repo and run `docker build . -t soakbean && docker build run soakbean` (\*TODO\*) |
 
-> optional: copy [middleware](middleware) functions to `src/.lua`-folder where needed
+> middleware: copy [middleware](middleware) functions to `src/.lua`-folder where needed
 
 ## Middleware functions
 
@@ -72,7 +71,7 @@ app.use( function(req,next)
 end)
 ```
 
-> WANTED: please contribute your middleware functions to the [middleware](middleware) folder. Everybody loves (re)using battle-tested middleware.
+> WANTED: please contribute your [middleware](middleware) functions by pushing repositories with nameconvention `soakbean-middleware-<name>`. Everybody loves (re)using battle-tested middleware.
 
 ## req & res object
 
