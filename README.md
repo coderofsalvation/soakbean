@@ -151,7 +151,9 @@ end)
 
 * scope is backend, not frontend
 * http auth
-* middleware: sqlite user sessions
-* middleware: sqlite tiny job queue
-* middleware: sqlite tiny rule engine
-* middleware: sqlite CRUD middleware (endpoints + sqlite schema derived from jsonschema)
+* middleware: sqlite user sessions (*)
+* middleware: sqlite tiny job queue (*)
+* middleware: sqlite tiny rule engine (*)
+* middleware: sqlite CRUD middleware (endpoints + sqlite schema derived from jsonschema) (*)
+
+\* = please contribute! =]
