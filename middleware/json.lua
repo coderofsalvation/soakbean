@@ -384,5 +384,25 @@ function json.decode(str)
   return res
 end
 
+function json.middleware()
+  local json_response = function(response)
+    return function()
+      return function(req,res,next)
+        if type(res._body) == "table" then 
+          res.header('content-type',"application/json")
+          res.body( json.encode(res._body) )
+        end
+        response(req,res,next)
+      end
+    end
+  end
+  sb.response = json_response(sb.response())
+  return function(req,res,next)
+    if req.method ~= "GET" and req.header['Content-Type']:match("application/json") and GetPayload():sub(0,1) == "{" then
+      req.body = json.decode( GetPayload() )
+    end
+    next()
+  end
+end
 
 return json

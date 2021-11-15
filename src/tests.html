@@ -1,0 +1,77 @@
+<html>
+  <head>
+    <title>soakbean tests</title>
+  </head>
+  <body style="margin:40px">
+    <pre style="border-radius:5px; padding:10px; background:#333; color:AAE; height:98vh; width:100%;" id="console"></pre>
+    <script>
+      function test(opts){
+            var $console = document.querySelector("#console");
+            var printf  = (str) => $console.innerHTML += str + "\n";
+            this.node   = typeof process != undefined && typeof process != "undefined"
+            this.tests  = this.tests || []
+            this.errors = 0
+            this.error  = (msg) => { this.errors += 1; printf("[E] error: "+msg) }
+            this.add    = (description, cb) => this.tests.push({ description, cb })
+            this.done   = (ready) => { printf("\n> tests : "+this.tests.length+"\n> errors: "+this.errors); if( this.node ) process.exit( this.errors == 0 ? 0 : 1); ready(this) }
+            this.run    = (ready) => {
+                var p = Promise.resolve()
+                var runTest = (i) => {
+                    return new Promise( (resolve, reject) => {
+                        var test = this.tests[i]
+                        if( !test ) return this.done(ready)
+                        if( this.node ) printf("[ ] "+test.description)
+                        var onError = (err) => { this.error(err); this.done(ready) }
+                        var _next   = () => { printf("[✓] "+test.description); p.then(runTest(i+1)) }
+                        try { test.cb(_next, onError ) } catch (e) { onError(e) }
+                    })
+                }
+                p.then( runTest(0) )
+            }
+            return this
+        }
+        
+        var t = new test()
+        
+        t.add("testing index.html",  function(next, error){
+          fetch('/index.html')
+          .then( (res) => res.text() )
+          .then( (html) => {
+            if( !html.match(/<img/) ) error("no images found")
+            next()
+          })
+          .catch( error )
+        })
+
+        t.add("testing POST /save",  function(next, error){
+          fetch('/save',{
+            method:"POST",
+            headers:{ "content-type":"application/json" },
+            body: JSON.stringify({foo:123})
+          })
+          .then( (res) => res.json() )
+          .then( (json) => {
+            if( json.cache && json.cache.foo == 123 ) next()
+            else throw 'expected {cache:{foo:123}}'
+          })
+          .catch( error )
+        })
+
+        t.add("testing GET /data",  function(next, error){
+          fetch('/data',{
+            method:"GET",
+            headers:{ "content-type":"application/json" }
+          })
+          .then( (res) => res.json() )
+          .then( (json) => {
+            if( json.notes && json.notes.length == 3 ) next()
+            else throw 'expected array with 3 items'
+          })
+          .catch( error )
+        })
+
+        t.run( () => console.log("done") )
+
+    </script>
+  </body>
+</html>

@@ -13,34 +13,17 @@ app = require("soakbean") {
 
 app.url['^/data']   = '/data.lua'          -- setup file endpoint
 app                                        --
+.use( require("json").middleware() )       -- plug'n'play json API middleware 
 .use( app.router( app.url ) )              -- url router
-.use( function(req,next) Route() end)      -- redbean fileserver
+.use( app.response() )                     -- serve app response  (if any)
+.use( function(req,next) Route() end)      -- default redbean fileserver
 
-function OnHttpRequest()
-  app.run()
-end
-
-app.post('^/save', function(req,next)       -- setup inline POST endpoint
-  SetStatus(200)                            
+app.post('^/save', function(req,res,next)  -- setup inline POST endpoint
   -- also .get(), .put(), .delete(), .options()
-  print(req.body)
-  for k,v in pairs(req.body) do app.save(k,v) end
+  app.cache  = req.body                     -- middleware auto-decodes json
+  res.status(200)                         
+  res.body({cache=app.cache})               -- middleware auto-encodes json 
+  next()
 end)
 
-app.save = function(k,v)                    -- called by hello.lua
-  print(k .. " (saved)") 
-  app.schema.properties[k].default = v      -- saved to server cache (fast)
-                                            -- see http://redbean.dev for SQLite code 
-end
-
-app.foo = function()
-  return {foo="bar"}
-end
-
-app.on('foo', function()
-  print("im spying on foo!")
-end)
-
-app.on('/hello.lua', function(req)
-  print("im spying on hello.lua!")
-end)
+function OnHttpRequest() app.run() end

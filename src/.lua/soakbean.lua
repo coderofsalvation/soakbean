@@ -10,6 +10,7 @@ sb = {
   middleware={},
   handler={},
   data={},
+  charset="utf-8",
 
   __index=function(self,k,v)
     if sb.data[k] then return sb.data[k] end
@@ -64,16 +65,12 @@ sb = {
 
   request = function(method)
     return function(path,f)
-      sb.app.url[path] = function(req,next)
+      sb.app.url[path] = function(req,res,next)
         if req.method == method then 
-          f(req,next) 
+          f(req,res,next) 
         else next() end 
       end
     end
-  end,
-
-  json = function(t)
-    Write( json.encode(t) )
   end,
 
   use = function(f)
@@ -82,8 +79,8 @@ sb = {
   end,
 
   useDefaults = function(app)
-    app.use( function(req,next)
-      app.pub(req.url,req)
+    app.use( function(req,res,next)
+      app.pub(req.url,{req=req,res=res})
       next()
     end)
   end,
@@ -100,26 +97,72 @@ sb = {
       protocol=GetScheme(),
       body={}
     }
-    if req.method == "POST" and req.header['Content-Type'] == "application/json" and GetPayload():sub(0,1) == "{" then
-      req.body = json.decode( GetPayload() )
+    local res={
+      _status=nil,
+      _header={},
+      _body=""
+    }
+    res.status = function(status) res._status = status ; sb.pub('res.status',status)          end
+    res.body   = function(v)      res._body = v        ; sb.pub('req.body'  ,body)            end
+    res.header = function(k,v)    
+      if v == nil then return res._header[k] end 
+      res._header[k] = v 
+      sb.pub('res.header',{key=k,value=v})
     end
+    res.header("content-type","text/html")
     -- run middleware
     next = function()
       k = k+1
-      if type(sb.middleware[k]) == "function" then sb.middleware[k](req,next) end
+      if type(sb.middleware[k]) == "function" then sb.middleware[k](req,res,next) end
     end
     next()
   end,
 
+  json = function()
+    local json_response = function(response)
+      return function()
+        return function(req,res,next)
+          if type(res._body) == "table" then 
+            res.header('content-type',"application/json")
+            res.body( json.encode(res._body) )
+          end
+          response(req,res,next)
+        end
+      end
+    end
+    sb.response = json_response(sb.response())
+    return function(req,res,next)
+      if req.method ~= "GET" and req.header['Content-Type']:match("application/json") and GetPayload():sub(0,1) == "{" then
+        req.body = json.decode( GetPayload() )
+      end
+      next()
+    end
+  end,
+
+  response = function()
+    return function(req,res,next)
+      if res._body ~= nil and res._status ~= nil and res._header['content-type'] ~= nil then 
+        SetStatus(res._status)
+        for k,v in pairs(res._header) do 
+          if k == "content-type" then v = v .. "; charset=" .. sb.charset end
+          SetHeader(k,v) 
+        end
+        if type(res._body) == "string" then
+          Write( res._body )
+        else print("[ERROR] res.body is not a string (HINT: use json middleware)") end
+      else next() end
+    end
+  end,
+
   router = function(router)
-    return function(req,next)
+    return function(req,res,next)
       for p1, p2 in pairs(router) do 
         if GetPath():match(p1) then
           if type(p2) == "string" then 
             print("router: " .. p1 .. " => " .. p2)
             RoutePath(p2) 
           end
-          if type(p2) == "function" then p2(req,next) end
+          if type(p2) == "function" then p2(req,res,next) end
           sb.pub(p1,req)
           sb.pub(p2,req)
           return true

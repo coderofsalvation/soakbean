@@ -9,24 +9,25 @@ app = require("soakbean") {
   opts = { my_cli_arg=1 },
   appname = "SOAKBEAN app"
 }
+app.url['^/data']   = '/data.lua'          -- add virtual file endpoints
 
-app.url['^/mydata']   = '/data.lua'         -- add virtual file endpoints
+app                                        --
+.use( require("json").middleware() )       -- plug'n'play json API middleware 
+.use( app.router( app.url ) )              -- url router
+.use( app.response() )                     -- serve app response  (if any)
+.use( function(req,next) Route() end)      -- default redbean fileserver
 
-app                                         
-.use( app.router( app.url ) )               -- url router
-.use( require("blacklisturl")({"^/foo"}) )  -- add plug'n'play middleware 
-.use( function(req,next) Route() end)       -- redbean fileserver
-
-app.post('^/save', function(req,next)       -- setup inline POST endpoint
-  SetStatus(200)                            -- also support for: .get() 
-  app.cache = req.body                      -- .put() .delete() and .options()
-  print(req.body.foo.bar)                   -- automatic json parser
+app.post('^/save', function(req,res,next)  -- setup inline POST endpoint
+  res.status(200)                          -- also: .get(), .put(), .delete(), .options()
+  app.cache  = req.body                    -- middleware auto-decodes json
+  res.body({cache=app.cache})              -- middleware auto-encodes json 
+  next()
 end)
 
-function OnHttpRequest() app.run() end      -- attach to redbean
+function OnHttpRequest() app.run() end
 ```
 
-> Profit! Now run `soakbean.com -D . -- -my_cli_arg=99` on windows,mac and linux!
+> Profit! Now run `soakbean.com -D . -- -my_cli_arg=99` on windows,mac or linux (yes!)
 
 ## Beautiful micro stack
 
@@ -35,7 +36,7 @@ function OnHttpRequest() app.run() end      -- attach to redbean
 * re-use middleware functions across redbean projects
 * reactive programming (write less code)
 * easy express-style routing
-* adapt easily to redbean API changes
+* easily adapt to redbean API changes
 
 ## Installation
 
@@ -73,7 +74,7 @@ end)
 
 > WANTED: please contribute your middleware functions to the [middleware](middleware) folder. Everybody loves (re)using battle-tested middleware.
 
-## Req object
+## req & res object
 
 | key | type | alias for redbean |
 |-|-|-|
@@ -84,6 +85,12 @@ end)
 | `req.header` | table | `GetHeaders()` |
 | `req.protocol` | string | `GetScheme()` |
 | `req.body` | table (for json POST/PUT/DELETE) or string |  |
+
+| key | type | alias for redbean |
+|-|-|-|
+| `res.body(value)` | string | `Write(value) including auto-encoding (json e.g.)` |
+| `res.status(code)` | int | `SetStatus(code)` |
+| `res.header(type,value)` | string,string | `SetHeader(type,value)` |
 
 ## Reactive programming
 
@@ -131,6 +138,29 @@ app.on('somefile.lua', function(a,b)
   -- do something
 end)
 ```
+
+#### react to response codes 
+
+```lua
+app.on('res.header', function(k,v)
+  if k == "content-type" and v == "application/xml" then 
+    headerchanges = headerchanges + 1
+  fi
+end)
+-- note: only for debugging, use app.use(..) for final header
+```
+
+#### react to response changes
+
+```lua
+app.on('res.status', print )
+app.on('res.body'  , print )
+app.on('res.header', function(k,v)
+  print(k .. " => " .. v)
+end)
+```
+
+> NOTE: above is handy for debugging a flow. Use `app.use(..)` for more control.
 
 ## Roadmap / Scope
 
