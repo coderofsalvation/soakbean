@@ -83,7 +83,7 @@ end)
 | `req.host` | string | `GetHost()` |
 | `req.header` | table | `GetHeaders()` |
 | `req.protocol` | string | `GetScheme()` |
-| `req.body` | table (for json POST/PUT/DELETE) or string |  |
+| `req.body` | table or string |  |
 | `res.body(value)` | string | `Write(value) including auto-encoding (json e.g.)` |
 | `res.status(code)` | int | `SetStatus(code)` |
 | `res.header(type,value)` | string,string | `SetHeader(type,value)` |
