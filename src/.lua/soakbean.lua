@@ -63,13 +63,13 @@ sb = {
     end
   end,
 
-  request = function(method)
+  request = function(method, app)
     return function(path,f)
-      sb.app.url[path] = function(req,res,next)
-        if req.method == method then 
+      app.use( function(req,res,next)
+        if req.url:match(path) and req.method == method then 
           f(req,res,next) 
         else next() end 
-      end
+      end)
     end
   end,
 
@@ -89,7 +89,7 @@ sb = {
     local next = function() end
     local k = 0
     local req = {
-      param=GetParams(),
+      param={},
       method=GetMethod(),
       host=GetHost(),
       header=GetHeaders(),
@@ -102,6 +102,10 @@ sb = {
       _header={},
       _body=""
     }
+    local params = GetParams()
+    if params ~= nil then
+      for i,p in pairs(params) do req.param[ p[1] ] = p[2] end
+    end
     res.status = function(status) res._status = status ; sb.pub('res.status',status)          end
     res.body   = function(v)      res._body = v        ; sb.pub('req.body'  ,body)            end
     res.header = function(k,v)    
@@ -172,14 +176,26 @@ sb = {
     end
   end,
 
-
-  init = function()
+  init = function(app)
     for k,v in pairs(argv) do 
-      app.opts[ v:gsub("=.*",""):gsub("^-","") ] = v:gsub(".*=","")
+      app.opts[ v:gsub("=.*","") ] = v:gsub(".*=","")
     end
-    for k,v in pairs(sb.app.opts) do 
-      print("$ ./soakbean.com -- -" .. k .. "=" .. v )
+    sb.runcmd(app)
+  end,
+
+  runcmd = function(app)
+    for k,v in pairs(app.opts) do 
+      if app.cmd[k] then 
+        local file = app.cmd[k].file
+        return require( file:sub(0,-5) )(app,argv)
+      end
+    end 
+    print("\nUsage: " .. app.bin .. " <cmd> [opts]\n\n")
+    for k,v in pairs(app.cmd) do 
+      print("\t" .. app.bin .. " " .. k .. "\t\t" .. v.info )
     end
+    print("")
+    os.exit()
   end
 
 }
@@ -191,12 +207,12 @@ return function(data)
   sb.data = data
   sb.data.url = {}
   if data.url == nil then sb.data.url = {} end 
-  sb.get  = sb.request('GET')
-  sb.post = sb.request('POST')
-  sb.put = sb.request('PUT')
-  sb.options = sb.request('OPTIONS')
-  sb.delete  = sb.request('DELETE')
-  app.init()
+  sb.get  = sb.request('GET', app)
+  sb.post = sb.request('POST', app)
+  sb.put = sb.request('PUT', app)
+  sb.options = sb.request('OPTIONS', app)
+  sb.delete  = sb.request('DELETE', app)
+  sb.init(app)
   sb.useDefaults(app)
   return app
 end
