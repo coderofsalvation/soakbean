@@ -42,7 +42,7 @@ function OnHttpRequest() app.run() end
 
 | Easy | DIY | Docker |
 |-|-|-|
-| rename [soakbean.com](soakbean.com) to `soakbean.zip`, add lua + html files, rename back to `soakbean.com` and run `./soakbean.com` | copy [soakbean.lua](src/lua/soakbean.lua) (and optional middleware) to your [redbean.com](https://redbean.dev) `.lua` folder, and copy the `.init.lua` above | clone this repo and run `./make docker` and surf to `http://localhost:8080` |
+| rename [soakbean.com](soakbean.com) to `soakbean.zip`, add lua + html files, rename back to `soakbean.com` and run `./soakbean.com` | copy [soakbean.lua](src/.lua/soakbean.lua) (and optional middleware) to your [redbean.com](https://redbean.dev) `.lua` folder, and copy the `.init.lua` above | clone this repo and run `./make docker` and surf to `http://localhost:8080` |
 
 > middleware: copy [middleware](middleware) functions to `src/.lua`-folder where needed
 
