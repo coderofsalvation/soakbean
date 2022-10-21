@@ -2,32 +2,32 @@
 
 ## Reactive plugnplay middleware for redbean
 
-Write beautiful [redbean apps](https://redbean.dev) like this [.init.lua](src/.init.lua):
+Write beautiful ~2.3MB [redbean (docker) apps](https://redbean.dev) like this [.init.lua](src/.init.lua):
 
 ```lua
 app = require("soakbean") {
-  opts = { my_cli_arg=1 },
-  appname = "SOAKBEAN app"
+  bin = "./soakbean.com",
+  opts = { my_cli_arg=0 },
+  cmd={
+    runtask =  {file="sometask.lua",   info="description of cli cmd"}
+  },
+  title     = 'SOAKBEAN - a buddy of redbean',
 }
-app.url['^/data']   = '/data.lua'          -- add virtual file endpoints
 
+app.url['^/data']   = '/data.lua'          -- setup custom file endpoint
+                                           --
+app.get('^/', app.template('index.html') ) -- alias for app.tpl( LoadAsset('index.html'), app )
+                                           -- also see app.post app.put and so on
 app                                        --
-.use( require("json").middleware() )       -- plug'n'play json API middleware 
-.use( app.router( app.url ) )              -- url router
-.use( app.response() )                     -- serve app response  (if any)
-.use( function(req,next) Route() end)      -- default redbean fileserver
-
-app.post('^/save', function(req,res,next)  -- setup inline POST endpoint
-  res.status(200)                          -- also: .get(), .put(), .delete(), .options()
-  app.cache  = req.body                    -- middleware auto-decodes json
-  res.body({cache=app.cache})              -- middleware auto-encodes json 
-  next()
-end)
+.use( require("json").middleware() )       -- try plug'n'play json API middleware 
+.use( app.router( app.url ) )              -- try url router
+.use( app.response() )                     -- try serve app response  (if any)
+.use( function(req,next) Route() end)      -- fallback default redbean fileserver
 
 function OnHttpRequest() app.run() end
 ```
 
-> Profit! Now run `soakbean.com -D . -- -my_cli_arg=99` on windows,mac or linux (yes!)
+> Profit! Now run `soakbean.com -D . -- --my_cli_arg=99` on windows,mac or linux (yes!)
 
 ## Beautiful micro stack
 
@@ -46,7 +46,7 @@ function OnHttpRequest() app.run() end
 
 > middleware: copy [middleware](middleware) functions to `src/.lua`-folder where needed
 
-## Cute simple backend<->frontend chatting
+## Cute simple backend<->frontend traffic
 
 Just look at how cute this [index.html](index.html) combines serverside templating with RESTful & DOM-reactive templating:
 
