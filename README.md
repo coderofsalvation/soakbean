@@ -48,7 +48,7 @@ function OnHttpRequest() app.run() end
 
 ## Cute simple backend<->frontend traffic
 
-Just look at how cute this [index.html](index.html) combines serverside templating with RESTful & DOM-reactive templating:
+Just look at how cute this [index.html](src/index.html) combines serverside templating with RESTful & DOM-reactive templating:
 
 ```
 <title>${title}</title>                  <-- evaluated serverside                           -->
