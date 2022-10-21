@@ -1,67 +1,40 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>SOAKBEAN - a buddy of redbean</title>
+    <title>${title}</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- see docs @ https://reefjs.com -->
-    <script src="https://cdn.jsdelivr.net/npm/reefjs@10/dist/reef.min.js"></script>
-  </head>
-  <body>
-    <div id="app"></div>
-
+    <!-- see docs @ https://alpinejs.dev -->
+    <script src="//unpkg.com/alpinejs" defer></script>
+    <body x-data>
+    <div style="position:relative">
+      <div class="container" style="height:99vh;width:400px;margin:0 auto;margin-top:40px;">
+        <center>
+          <img src="https://github.com/coderofsalvation/soakbean/raw/master/.dtp/soakbean.jpg"/><br>
+          <img src="https://github.com/coderofsalvation/soakbean/raw/master/.dtp/soakbean.gif" style="width:100%"/>
+        </center>
+        <br><br>
+        <div class="title">${title}</div>
+        <br>
+        <template x-for="note in $store.app.notes">
+          <div><b x-text="note"></b></div>
+        </template>
+        <br>
+        Read <a href="https://github.com/coderofsalvation/soakbean" target="_blank">the documentation here</a>.
+        <div style="position:absolute;bottom:150px">
+          <center x-text="$store.app.time"></center>
+        </div>
+      </div>
+    </div>
     <script>
-
-			fetch('/data')
-			.then( (res) => res.json() )
-			.then( (data) => {
-
-				let store = new Reef.Store({
-					data:{
-						...data,
-						time:""
-					}
-				})
-
-				let app = new Reef('#app', {
-					store,
-					template: function (props) {
-						return `
-            <div style="position:relative">
-              <div class="container" style="height:99vh;width:400px;margin:0 auto;margin-top:40px;">
-                <center>
-                  <img src="https://github.com/coderofsalvation/soakbean/raw/master/.dtp/soakbean.jpg"/><br>
-                  <img src="https://github.com/coderofsalvation/soakbean/raw/master/.dtp/soakbean.gif" style="width:100%"/>
-                </center>
-                <br><br>
-                <div class="title"> ${props.subtitle} </div>
-                <br>
-                <div id="notes"></div><br>
-                <br>
-                Read <a href="https://github.com/coderofsalvation/soakbean" target="_blank">the documentation here</a>.
-                <div style="position:absolute;bottom:150px">
-                  <center>${props.time}</center>
-                </div>
-              </div>
-            </div>`
-					}
-				})
-
-				let notes = new Reef('#notes', {
-					store,
-					template: function (props) {
-						return `${props.notes.map(function (note) {
-                      return `<div><b>${note}</b></div>`
-                      }).join('')}`
-					},
-					attachTo: app
-				})
-
-				setInterval( () => store.data.time = new Date(), 1000 )
-
-				app.render()
-
-			})
+        document.addEventListener('alpine:init', () => {
+          Alpine.store('app', {notes:[],title:''}) // expected schema
+          fetch('/data')
+          .then( (res) => res.json() )
+          .then( (app) => Alpine.store('app',app) )
+          setInterval( () => Alpine.store('app').time = new Date(), 300 )
+        })
     </script>
+    <style type="text/css"> * { font-family:helvetica; color:#555; }</style>
   </body>
 </html>

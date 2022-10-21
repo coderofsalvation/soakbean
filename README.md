@@ -46,6 +46,18 @@ function OnHttpRequest() app.run() end
 
 > middleware: copy [middleware](middleware) functions to `src/.lua`-folder where needed
 
+## Cute simple backend<->frontend chatting
+
+Just look at how cute this [index.html](index.html) combines serverside templating with RESTful & DOM-reactive templating:
+
+```
+<title>${title}</title>                  <-- evaluated serverside                           -->
+<span x-text="$store.app.time"/>         <-- evaluated clientside                           -->
+<span x-text="$store.app.title"/>        <-- evaluated clientside using REST call to server -->
+ 
+```
+
+
 ## Middleware functions
 
 You can easily manipulate the http-request flow, using existing middleware functions:
@@ -87,6 +99,21 @@ end)
 | `res.body(value)` | string | `Write(value) including auto-encoding (json e.g.)` |
 | `res.status(code)` | int | `SetStatus(code)` |
 | `res.header(type,value)` | string,string | `SetHeader(type,value)` |
+
+## Simple template evaluation
+
+index.html
+```
+<title>${title}</title>
+```
+
+lua
+```
+app.title = "hello world"
+app.get('^/', app.template('index.html') ) 
+```
+
+> NOTE: this is basically serving the output of `app.tpl( LoadAsset('index.html'), app )` 
 
 ## Reactive programming
 

@@ -1,8 +1,8 @@
 local json = require "json"
 
-function error(str)
-  print("[error] " .. str)
-end
+function error(str) print("[error] " .. str) end
+
+function keys(table) local i = 0 ; for k, v in pairs(table) do i = i + 1 end ; return i end
 
 sb = {}
 sb = {
@@ -176,11 +176,20 @@ sb = {
     end
   end,
 
+  template = function(file)
+    return function(req,res,next)
+      res.status(200)
+      res.header('content-type','text/html')
+      res.body( sb.app.tpl( LoadAsset(file), sb.app ) )
+      next()
+    end
+  end,
+
   init = function(app)
     for k,v in pairs(argv) do 
       app.opts[ v:gsub("=.*","") ] = v:gsub(".*=","")
     end
-    sb.runcmd(app)
+    if( keys(app.cmd) > 0 ) then sb.runcmd(app) end
   end,
 
   runcmd = function(app)
