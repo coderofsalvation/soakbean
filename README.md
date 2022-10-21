@@ -76,12 +76,22 @@ app.use(
 or just write ad-hoc middleware:
 
 ```lua
-app.use( function(req,next)
+app.use( function(req,res,next)
+  res.status(200)
+  res.header('content-type','text/html')
+  res.body('hello world')
+  next() -- comment this to prevent further middleware altering body, status headers e.g. 
+end)
+```
+
+```lua
+app.use( function(req,res,next)
     if !req.loggedin && req.url:match("^/mydata") then
-        SetStatus(403)
+       res.status(403)
     else next()
 end)
 ```
+
 
 > WANTED: please contribute your [middleware](middleware) functions by pushing repositories with nameconvention `soakbean-middleware-<name>`. Everybody loves (re)using battle-tested middleware.
 
