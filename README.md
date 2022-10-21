@@ -9,7 +9,7 @@ app = require("soakbean") {
   bin = "./soakbean.com",
   opts = { my_cli_arg=0 },
   cmd={
-    runtask =  {file="sometask.lua",   info="description of cli cmd"}
+    -- runtask =  {file="sometask.lua",   info="description of cli cmd"}
   },
   title     = 'SOAKBEAN - a buddy of redbean',
 }
