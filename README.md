@@ -1,6 +1,6 @@
 <img src=".dtp/soakbean.jpg"/>
 
-## Reactive plugnplay middleware for redbean microstack/server 
+## Reactive plugnplay middleware for redbean
 
 Write beautiful [redbean apps](https://redbean.dev) like this [.init.lua](src/.init.lua):
 
