@@ -58,9 +58,9 @@ $ ./yourapp.com --my-cli-arg=abc
 
 ## Getting started 
 
-| Easy | DIY | Docker |
+| Lazy | Recommended | Docker |
 |-|-|-|
-| download & rename [soakbean.com](https://github.com/coderofsalvation/soakbean/raw/master/soakbean.com) to `soakbean.zip`, add html (and/or lua) files, rename back to `soakbean.com` and run `./soakbean.com` | copy [soakbean.lua](src/.lua/soakbean.lua) (and optional middleware) to your [redbean.com](https://redbean.dev) `.lua` folder, and copy the `.init.lua` above | clone this repo and run `./make docker` and surf to `http://localhost:8080` |
+| download [soakbean.com](https://github.com/coderofsalvation/soakbean/raw/master/soakbean.com) to `soakbean.zip`, add html (and/or lua) files, rename back to `soakbean.com` and run `./soakbean.com` | download [redbean.com](https://redbean.dev) and run it in the `src` folder of this repo | clone this repo and run `./make docker` and surf to `http://localhost:8080` |
 
 > middleware: copy [middleware](middleware) functions to `src/.lua`-folder where needed
 
