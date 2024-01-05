@@ -27,7 +27,24 @@ app                                        --
 function OnHttpRequest() app.run() end
 ```
 
-> Profit! Now run `soakbean.com -D . -- --my_cli_arg=99` on windows,mac or linux (yes!)
+Just run it straight from the repository using [redbean.com](https://redbean.dev) itself:<br>
+
+```
+$ https://github.com/coderofsalvation/soakbean 
+$ cd src 
+$ redbean.com -D . --my-cli-arg=abc
+```
+
+Then you can easily package the current directory into your own (renamed redbean) COM-file:
+
+```
+$ sed -i 's/NAME=soakbean/NAME=yourapp/g'
+$ ./make all
+$ ./yourapp.com --my-cli-arg=abc
+```
+
+> Profit!
+
 
 ## Beautiful micro stack
 
