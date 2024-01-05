@@ -4,6 +4,17 @@
 
 Write beautiful ~2.3MB [redbean (docker) apps](https://redbean.dev) like this [.init.lua](src/.init.lua):
 
+## Beautiful micro stack
+
+<img src=".dtp/soakbean.gif">
+
+* re-use middleware functions across redbean projects
+* reactive programming (write less code)
+* easy express-style routing
+* easily adapt to redbean API changes
+
+## Express-style Syntactic sugar 
+
 ```lua
 app = require("soakbean") {
   bin = "./soakbean.com",
@@ -45,15 +56,6 @@ $ ./yourapp.com --my-cli-arg=abc
 
 > Profit!
 
-
-## Beautiful micro stack
-
-<img src=".dtp/soakbean.gif">
-
-* re-use middleware functions across redbean projects
-* reactive programming (write less code)
-* easy express-style routing
-* easily adapt to redbean API changes
 
 ## Getting started 
 
