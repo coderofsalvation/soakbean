@@ -60,7 +60,7 @@ $ ./yourapp.com --my-cli-arg=abc
 
 | Lazy | Recommended | Docker |
 |-|-|-|
-| download [soakbean.com](https://github.com/coderofsalvation/soakbean/raw/master/soakbean.com), add html (and/or lua) files using a zip-filemanager, and run `./soakbean.com` | download [redbean.com](https://redbean.dev) and run it in the `src` folder of this repo | clone this repo and run `./make docker` and surf to `http://localhost:8080` |
+| download [soakbean.com](https://github.com/coderofsalvation/soakbean/raw/master/soakbean.com), add html (and/or lua) files using a zip-filemanager, and run `./soakbean.com` | download [redbean.com](https://redbean.dev) and run it in the `src` folder of this repo (see above cmdline) | clone this repo and run `./make docker` and surf to `http://localhost:8080` |
 
 > middleware: copy [middleware](middleware) functions to `src/.lua`-folder where needed
 
