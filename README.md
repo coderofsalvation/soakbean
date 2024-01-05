@@ -41,8 +41,7 @@ function OnHttpRequest() app.run() end
 Just run it straight from the repository using [redbean.com](https://redbean.dev) itself:<br>
 
 ```
-$ https://github.com/coderofsalvation/soakbean 
-$ cd src 
+$ git clone https://github.com/coderofsalvation/soakbean && cd src
 $ redbean.com -D . --my-cli-arg=abc
 ```
 
