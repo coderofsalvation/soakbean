@@ -13,7 +13,7 @@ Write beautiful ~2.3MB [redbean (docker) apps](https://redbean.dev) like this [.
 * easy express-style routing
 * easily adapt to redbean API changes
 
-## Express-style Syntactic sugar 
+## Syntactic sugar 
 
 ```lua
 app = require("soakbean") {
